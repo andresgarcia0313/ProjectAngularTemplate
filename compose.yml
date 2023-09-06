@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  nodeapp:
+    build:
+      context: ./program
+      dockerfile: Containerfile
+    image: angular:latest
+    ports:
+      - "${PORT}:${PORT}"
+    container_name: angular
+    environment:
+      NODE_ENV: ${NODE_ENV}
+    volumes:
+      - ./program/app:/program/app
+    command: ["sh", "-c", "
+        ln -s /program/node_modules /program/app/node_modules &&
+        mkdir /program/.angular &&
+        ln -s /program/.angular /program/app/.angular && 
+        echo 'y'|npm start -- --host=0.0.0.0 --port=${PORT} --disable-host-check& 
+        tail -f /dev/null
+      "]
+    networks:
+      - net
+networks:
+  net:

@@ -1,0 +1,12 @@
+FROM node:16-alpine
+RUN apk add bash
+RUN npm install -g @angular/cli
+WORKDIR /program/app/
+COPY ./app/package*.json ./
+RUN npm install
+RUN mv /program/app/node_modules /program/node_modules 
+RUN ln -s /program/node_modules /program/app/node_modules
+RUN ln -s /program/.angular /program/app/.angular
+COPY ./app/ /program/app/
+EXPOSE 4200 80 443
+CMD ["npm", "start"]
